@@ -1,0 +1,17 @@
+#usa-map path {
+  fill: #ccc;
+  stroke: #bbb;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  position: relative;
+  z-index: 1;
+  outline: none;
+}
+#usa-map path:hover {
+  stroke: #000;
+}
+.tooltip-left .tooltip-inner {
+  text-align: left;
+}
