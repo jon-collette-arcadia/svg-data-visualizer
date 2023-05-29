@@ -1,4 +1,5 @@
 console.clear();
+console.log( $.fn.jquery );
 /* window.onload = function () {
   let elements = document.body.getElementsByTagName("*");
   for (let i = 0; i < elements.length; i++) {
@@ -257,3 +258,28 @@ function resetStates() {
   }
   svgZoom();
 }
+
+var jsonData;
+
+$.getJSON("json/01000.json", function(data) {
+    jsonData = data;
+
+    // You can log your data here to check if it is loaded correctly.
+    console.log(jsonData);
+}).fail(function(jqXHR, textStatus, error) {
+    // Handle errors here
+    console.error("Error getting JSON data: ", textStatus, error);
+});
+
+$.ajax({
+    url: "svg/Alabama.svg",
+    type: "GET",
+    dataType: "text",
+    success: function(svgData) {
+        // 'data' is the content of the SVG file. You can append it to an element in your HTML.
+        console.log(svgData);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.log("Error: " + errorThrown);
+    }
+});
