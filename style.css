@@ -1,4 +1,4 @@
-#usa-map path {
+#map svg > path, #map svg > g {
   fill: #ccc;
   stroke: #bbb;
   stroke-width: 1;
@@ -8,9 +8,14 @@
   position: relative;
   z-index: 1;
   outline: none;
+  cursor: pointer;
 }
-#usa-map path:hover {
+#map svg > path:hover, #map svg > g:hover {
   stroke: #000;
+}
+.white-fill {
+  fill: white !important;
+  stroke: none !important;
 }
 .tooltip-left .tooltip-inner {
   text-align: left;
