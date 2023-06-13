@@ -3314,13 +3314,7 @@ function svgZoom(element) {
 	svg.attr("viewBox", `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
 }
 /* let elements = document.body.getElementsByTagName('*');
-for(let i = 0; i < elements.length; i++) {
-	let id = elements[i].id;
-	if (id && stateNames[id]) {
-		elements[i].setAttribute('data-bs-toggle', 'tooltip');
-		elements[i].setAttribute('data-bs-title', stateNames[id]);
-	}
-}
+
 
 
 
@@ -3453,14 +3447,14 @@ $.getJSON("json/01000.json", function(data) {
 		console.error("Error getting JSON data: ", textStatus, error);
 }); */
 
-function mapClick(target) {
+/* function mapClick(target) {
 	var id = target[0].id;
 	console.log(id);
 	console.log(stateNames[id]);
 	var getdata = stateNames[id] || countyFips[id];
 	console.log(getdata);
 	initSVG("#map",getdata);
-	/* $.getJSON("json/01000.json", function(data) {
+	$.getJSON("json/01000.json", function(data) {
 		jsonData = data;
 
 		// You can log your data here to check if it is loaded correctly.
@@ -3468,39 +3462,56 @@ function mapClick(target) {
 }).fail(function(jqXHR, textStatus, error) {
 		// Handle errors here
 		console.error("Error getting JSON data: ", textStatus, error);
-	}); */
-}
-
-function listeners(containername) {
-	var container = $(containername+" svg");
-	var target = containername+" path:last";
-	var svgelements = $(containername+" path:last").closest('svg').children();
-	svgelements.each(function() {
-	    $(this).on("mouseenter", function() {
-	        container.append(this);
-	    });
-	    $(this).on("click", function() {
-	        console.log($(this));
-	        mapClick($(this));
-	    });
 	});
-}
+} */
 
 function initSVG(containername, filename) {
 	var file = filename;
 	var container = $(containername);
 	$.ajax({
-		url: "svg/"+file+".svg",
+		url: "svg/" + file + ".svg",
 		type: "GET",
 		dataType: "text",
 		success: function(svgData) {
 			container.html(svgData);
 			svgZoom(container);
-			listeners(containername);
+			var container2 = $("#map svg");
+			var svgelements = $("#map path:last").closest('svg').children();
+			svgelements.each(function() {
+				$(this).attr('tabindex', '0');
+				$(this).attr('data-bs-toggle', 'tooltip');
+				$(this).attr('data-bs-title', stateNames[$(this).attr('id')]);
+				var title = stateNames[$(this).attr('id')];
+				new bootstrap.Tooltip($(this), {
+					title: title,
+					html: true,
+					template: '<div class="tooltip tooltip-left" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+				});
+				$(this).on("mouseenter", function() {
+					container2.append(this);
+				});
+				$(this).on("click", function() {
+					$(".selected").removeClass("selected");
+					$(this).addClass("selected");
+				});
+			});
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log("Error: " + errorThrown);
 		}
 	});
 }
+$('#btn-zoomin').on('click', function() {
+	if ( $(".selected").length ) {
+		$(this).prop('disabled', true);
+		$("#btn-zoomout").prop('disabled', false);
+		var stateId = $('#map .selected').attr('id');
+		initSVG("#map",stateNames[stateId]);
+	}
+});
+$('#btn-zoomout').on('click', function() {
+	$(this).prop('disabled', true);
+	$("#btn-zoomin").prop('disabled', false);
+	initSVG("#map","USA");
+});
 initSVG("#map","USA");
